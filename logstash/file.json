@@ -1,8 +1,12 @@
-{   "from" : "BPU-1",       "to": "SAF",     "msg" :"Hello, SAF" }
-{   "from" : "SAF",         "to": "BPU-1",   "msg" :"Hi, there" }
-{   "from" : "BPU-1",       "to": "SAF",     "msg" :"I would like to set up a call, please" }
-{   "from" : "SAF",         "to": "BPU-1",   "msg" :"Mkay!" }
-{   "from" : "SAF",         "to": "UEF",     "msg" :"BPU-1 wants to set up a call" }
-{   "from" : "UEF",         "to": "SAF",     "msg" :"OK, I will set up one, then contact BPU-1" }
-{   "from" : "UEF",         "to": "UEF",     "msg" :"Memo to self: Fix things internally" }
-{   "from" : "UEF",         "to": "BPU-1",   "msg" :"Ok, the message has been set up." }
+{   "from": "BPU-1",       "to": "SAF",     "msg": "Hello, SAF",                "test-id": "ABC"}
+{   "from": "SAF",         "to": "BPU-1",   "msg": "Hi, there",                 "test-id": "ABC"}
+{   "from": "BPU-1",       "to": "SAF",     "msg": "I would like to set up a call, please", "test-id": "ABC"}
+{   "from": "SAF",         "to": "BPU-1",   "msg": "Mkay!",                     "test-id": "ABC"}
+{   "from": "SAF",         "to": "UEF",     "msg": "BPU-1 wants to set up a call", "test-id": "ABC"}
+{   "from": "UEF",         "to": "SAF",     "msg": "OK, I will set up one, then contact BPU-1", "test-id": "ABC"}
+{   "from": "Magnus",      "to": "Magnus",  "msg": "Ok, Let's start this.", "test-id": "CBA"}
+{   "from": "Magnus",      "to": "Someone", "msg": "Hey! Who are you?", "test-id": "CBA"}
+{   "from": "UEF",         "to": "UEF",     "msg": "Memo to self: Fix things internally", "test-id": "ABC"}
+{   "from": "UEF",         "to": "BPU-1",   "msg": "Ok, the message has been set up.", "test-id": "ABC"}
+{   "from": "Magnus",      "to": "Magnus",  "msg": "Very suspicious!", "test-id": "CBA"}
+{   "from": "Someone",     "to": "Magnus",  "msg": "Hi, I'm nobody, don't mind me! :)", "test-id": "CBA"}
