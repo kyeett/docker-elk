@@ -23,7 +23,7 @@ type Signal struct {
 	TestId  string `json:"test-id"`
 }
 
-func generateSignal() Signal {
+func generateSignal(testId string) Signal {
 
 	names := []string{
 		"Alice",
@@ -48,14 +48,14 @@ func generateSignal() Signal {
 		To:      to,
 		From:    from,
 		Message: messages[rand.Intn(len(messages))],
-		TestId:  "MAG",
+		TestId:  testId,
 	}
 
 	return message
 }
 
 func handleRequest(conn net.Conn) {
-	signal := generateSignal()
+	signal := generateSignal("DUMMY")
 	b, err := json.Marshal(signal)
 
 	if err != nil {
@@ -94,7 +94,7 @@ func CheckError(err error) {
 	}
 }
 
-func sendOnPort() {
+func sendOnPort(testId string) {
 	cAddr, err := net.ResolveUDPAddr("udp", ":0")
 	CheckError(err)
 
@@ -108,7 +108,7 @@ func sendOnPort() {
 		os.Exit(1)
 	}
 
-	signal := generateSignal()
+	signal := generateSignal(testId)
 	b, err := json.Marshal(signal)
 
 	if err != nil {
@@ -124,5 +124,11 @@ func sendOnPort() {
 
 func main() {
 	rand.Seed(time.Now().Unix())
-	sendOnPort()
+
+	testId := "default"
+	if len(os.Args) > 1 {
+		testId = os.Args[1]
+	}
+
+	sendOnPort(testId)
 }
