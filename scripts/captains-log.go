@@ -10,16 +10,17 @@ import (
 )
 
 const (
-	CONN_HOST = "localhost"
-	CONN_PORT = "3333"
-	CONN_TYPE = "tcp"
+	CONN_HOST      = "0.0.0.0"
+	CONN_PORT      = "3333"
+	CONN_PORT_SEND = "5002"
+	CONN_TYPE      = "tcp"
 )
 
 type Signal struct {
-	To      string
-	From    string
-	Message string
-	TestId  string
+	To      string `json:"to"`
+	From    string `json:"from"`
+	Message string `json:"msg"`
+	TestId  string `json:"test-id"`
 }
 
 func generateSignal() Signal {
@@ -47,7 +48,7 @@ func generateSignal() Signal {
 		To:      to,
 		From:    from,
 		Message: messages[rand.Intn(len(messages))],
-		TestId:  "DSA",
+		TestId:  "MAG",
 	}
 
 	return message
@@ -68,8 +69,7 @@ func handleRequest(conn net.Conn) {
 	conn.Close()
 }
 
-func main() {
-	rand.Seed(time.Now().Unix())
+func listenOnPort() {
 
 	l, err := net.Listen(CONN_TYPE, CONN_HOST+":"+CONN_PORT)
 	if err != nil {
@@ -86,5 +86,43 @@ func main() {
 		os.Exit(1)
 	}
 	handleRequest(conn)
+}
 
+func CheckError(err error) {
+	if err != nil {
+		fmt.Println("Error: ", err)
+	}
+}
+
+func sendOnPort() {
+	cAddr, err := net.ResolveUDPAddr("udp", ":0")
+	CheckError(err)
+
+	sAddr, err := net.ResolveUDPAddr("udp", CONN_HOST+":"+CONN_PORT_SEND)
+	CheckError(err)
+
+	cConn, err := net.DialUDP("udp", cAddr, sAddr)
+
+	if err != nil {
+		fmt.Println("Error connecting: ", err.Error())
+		os.Exit(1)
+	}
+
+	signal := generateSignal()
+	b, err := json.Marshal(signal)
+
+	if err != nil {
+		fmt.Println("Error encoding:", err.Error())
+	}
+
+	fmt.Println(signal)
+	fmt.Println(b)
+
+	cConn.Write(b)
+	cConn.Close()
+}
+
+func main() {
+	rand.Seed(time.Now().Unix())
+	sendOnPort()
 }
