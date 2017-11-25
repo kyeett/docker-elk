@@ -4,14 +4,22 @@ import (
 	"encoding/json"
 	"fmt"
 	"math/rand"
+	"net"
+	"os"
 	"time"
 )
 
+const (
+	CONN_HOST = "localhost"
+	CONN_PORT = "3333"
+	CONN_TYPE = "tcp"
+)
+
 type Signal struct {
-	to      string
-	from    string
-	message string
-	testId  string
+	To      string
+	From    string
+	Message string
+	TestId  string
 }
 
 func generateSignal() Signal {
@@ -22,6 +30,8 @@ func generateSignal() Signal {
 		"Cilla",
 		"Dylan",
 	}
+
+	// Randomize to and from names
 	to := names[rand.Intn(len(names))]
 	from := names[rand.Intn(len(names))]
 
@@ -34,18 +44,16 @@ func generateSignal() Signal {
 	}
 
 	message := Signal{
-		to:      to,
-		from:    from,
-		message: messages[rand.Intn(len(messages))],
-		testId:  "DSA",
+		To:      to,
+		From:    from,
+		Message: messages[rand.Intn(len(messages))],
+		TestId:  "DSA",
 	}
 
 	return message
 }
 
-func main() {
-	rand.Seed(time.Now().Unix())
-	fmt.Println("Captain's log:\n")
+func handleRequest(conn net.Conn) {
 	signal := generateSignal()
 	b, err := json.Marshal(signal)
 
@@ -55,4 +63,28 @@ func main() {
 
 	fmt.Println(signal)
 	fmt.Println(b)
+
+	conn.Write(b)
+	conn.Close()
+}
+
+func main() {
+	rand.Seed(time.Now().Unix())
+
+	l, err := net.Listen(CONN_TYPE, CONN_HOST+":"+CONN_PORT)
+	if err != nil {
+		fmt.Println("Error listening:", err.Error())
+		os.Exit(1)
+	}
+
+	defer l.Close()
+	fmt.Println("Listening on " + CONN_HOST + ":" + CONN_PORT)
+
+	conn, err := l.Accept()
+	if err != nil {
+		fmt.Println("Error accepting: ", err.Error())
+		os.Exit(1)
+	}
+	handleRequest(conn)
+
 }
