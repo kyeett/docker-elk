@@ -16,11 +16,22 @@ const (
 	CONN_TYPE      = "tcp"
 )
 
+type Payload struct {
+	ID     int
+	Name   string
+	Colors []string
+}
+
 type Signal struct {
-	To      string `json:"to"`
-	From    string `json:"from"`
-	Message string `json:"msg"`
-	TestId  string `json:"test-id"`
+	To      string  `json:"to"`
+	From    string  `json:"from"`
+	Message string  `json:"msg"`
+	TestId  string  `json:"test-id"`
+	Payload Payload `json:"payload"`
+}
+
+func randomItemFromArray(arr []string) string {
+	return arr[rand.Intn(len(arr))]
 }
 
 func generateSignal(testId string) Signal {
@@ -32,9 +43,16 @@ func generateSignal(testId string) Signal {
 		"Dylan",
 	}
 
+	colors := []string{
+		"Crimson",
+		"Red",
+		"Ruby",
+		"Maroon",
+	}
+
 	// Randomize to and from names
-	to := names[rand.Intn(len(names))]
-	from := names[rand.Intn(len(names))]
+	to := randomItemFromArray(names)
+	from := randomItemFromArray(names)
 
 	messages := []string{
 		"Hello!",
@@ -44,11 +62,18 @@ func generateSignal(testId string) Signal {
 		"Goodbye",
 	}
 
+	payload := Payload{
+		ID:     rand.Intn(100),
+		Name:   randomItemFromArray(names),
+		Colors: []string{randomItemFromArray(colors), randomItemFromArray(colors), randomItemFromArray(colors), randomItemFromArray(colors), randomItemFromArray(colors), randomItemFromArray(colors)},
+	}
+
 	message := Signal{
 		To:      to,
 		From:    from,
 		Message: messages[rand.Intn(len(messages))],
 		TestId:  testId,
+		Payload: payload,
 	}
 
 	return message
